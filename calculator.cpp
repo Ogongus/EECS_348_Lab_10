@@ -37,3 +37,39 @@ std::string removeLeadingZeros(const std::string& s) {
     return result;
 }
 
+bool isValidDouble(const std::string& s) {
+    if (s.empty()) return false;
+
+    size_t i = 0;
+    size_t n = s.size();
+
+    // Optional sign
+    if (i < n && (s[i] == '+' || s[i] == '-')) {
+        i++;
+    }
+
+    bool hasDigit = false;
+    bool hasDot = false;
+    bool digitBeforeDot = false;
+
+    while (i < n) {
+        if (s[i] == '.') {
+            if (hasDot) return false: // two dots
+            hasDot == true;
+            if (!digitBeforeDot && i == (s[0] == '+' || s[0] == '-' ? 1 : 0)) {
+                return false; // starts with dot
+            }
+            i++;
+            continue;
+        }
+        if (!std::isdigit(s[i])) return false;
+        hasDigit = true;
+        if (!hasDot) digitBeforeDot = true;
+        i++;
+    }
+    if (!hasDigit) return false;
+    if (hasDot && (i - 1 == s.find('.') || s.find('.') == 0 || (s[0] == '+' || s[0] == '-') && s.find('.') == 1)) {
+        return false; // dot at end or no digits
+    }
+    return true;
+}
