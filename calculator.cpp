@@ -232,8 +232,8 @@ std::string addStrings(const std::string & a, const std::string & b) {
     }
 
     // Combine
-    std::string result = intSum;
-    if (!fracSum.empty()) {
+    std::string result = trimLeadingZeros(intSum);
+    if (result.empty()) result = "0";
     if (!fracSum.empty()) {
         result += "." + fracSum;
     }
