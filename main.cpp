@@ -24,6 +24,19 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
-        
+        if(!isValidDouble(num1)) {
+            std::cout << "Line " << lineNum << ": Invalid number: " << num1 << std::endl;
+            continue;
+        }
+
+        if (!isValidDouble(num2)) {
+            std::cout << "Line " << lineNum << ": Invalid number: " << num2 << std::endl;
+            continue;
+        }
+
+        std::string sum = addStrings(num1, num2);
+        std::cout << num1 << " + " << " = " << sum << std::endl;
     }
+    file.close();
+    return 0;
 }
