@@ -73,3 +73,32 @@ bool isValidDouble(const std::string& s) {
     }
     return true;
 }
+
+std::string addStrings(const std::string & a, const std::string & b) {
+    std::string num1 = a, num2 = b;
+    char sign1 = '+', sign2 = '+';
+    if (!num1.empty() && (num1[0] == '+' || num1[0] == '-')) {
+        sign1 = num1[0];
+        num1 = num1.substr(1);
+    }
+    if (!num2.empty() && (num2[0] == '+' || num2[0] == '-')) {
+        sign2 = num2[0];
+        num2 = num2.substr(1);
+    }
+
+    if (sign1 != sign2) {
+        // Different signs: subtract
+        if (sign1 == '-') {
+            return addStrings("-" + num1, num2) == "0" ? "0" : "-" + addStrings(num2, "-" + num1);
+        } else {
+            return addStrings(num1, "-" + num2);
+        }
+    }
+
+    // Same sign: add
+    size_t dot1 = num1.find('.'), dot2 = num2.find('.');
+    std::string int1 = (dot1 == std::string::npos) ? num1 : num1.substr(0, dot1);
+    std::string frac1 = (dot1 == std::string::npos) ? "" : num1.substr(dot1 + 1);
+    std::string int2 = (dot2 == std::string::npos) ? num2 : num2.substr(0, dot2);
+    std::string frac2 = (dot2 == std::string::npos) ? "" : num2.substr(dot2 + 1);
+}
