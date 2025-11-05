@@ -227,18 +227,18 @@ std::string addStrings(const std::string & a, const std::string & b) {
     }
     std::reverse(intSum.begin(), intSum.end());
 
+    while (!fracSum.empty() && fracSum.back() == '0') {
+        fracSum.pop_back();
+    }
+
     // Combine
     std::string result = intSum;
     if (!fracSum.empty()) {
-        fracSum = trimLeadingZeros(fracSum);
-        if (fracSum != "0") {
-            result += "." + fracSum;
-        } 
+    if (!fracSum.empty()) {
+        result += "." + fracSum;
     }
 
-    result = removeLeadingZeros(result);
-    if (sign1 == '-') {
-        if (result == "0") return "0";
+    if (sign1 == '-' && result != "0") {
         return "-" + result;
     }
     return result;
