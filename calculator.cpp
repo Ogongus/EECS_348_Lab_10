@@ -13,7 +13,6 @@ std::string removeLeadingZeros(const std::string& s) {
     if (s.empty() || s == "+" || s == "-") return s;
     std::string num = s;
     char sign = '+';
-    size_t i = 0;
 
     if (num[0] == '+' || num[0] == '-') {
         sign = num[0];
@@ -72,6 +71,37 @@ bool isValidDouble(const std::string& s) {
         return false; // dot at end or no digits
     }
     return true;
+}
+
+// Compare two positive decimal strings (returns: -1 if a < b, 0 if a == b, 1 if a > b)
+int comparePositive(const std::string& a, const std::string& b) {
+    std::string num1 = a, num2 = b;
+    
+    size_t dot1 = num1.find('.'), dot2 = num2.find('.');
+    std::string int1 = (dot1 == std::string::npos) ? num1 : num1.substr(0, dot1);
+    std::string frac1 = (dot1 == std::string::npos) ? "" : num1.substr(dot1 + 1);
+    std::string int2 = (dot2 == std::string::npos) ? num2 : num2.substr(0, dot2);
+    std::string frac2 = (dot2 == std::string::npos) ? "" : num2.substr(dot2 + 1);
+    
+    int1 = trimLeadingZeros(int1);
+    int2 = trimLeadingZeros(int2);
+    
+    if (int1.size() != int2.size()) {
+        return int1.size() > int2.size() ? 1 : -1;
+    }
+    if (int1 != int2) {
+        return int1 > int2 ? 1 : -1;
+    }
+    
+    // Pad fractions
+    size_t maxFrac = std::max(frac1.size(), frac2.size());
+    while (frac1.size() < maxFrac) frac1 += '0';
+    while (frac2.size() < maxFrac) frac2 += '0';
+    
+    if (frac1 != frac2) {
+        return frac1 > frac2 ? 1 : -1;
+    }
+    return 0;
 }
 
 std::string addStrings(const std::string & a, const std::string & b) {
