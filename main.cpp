@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
         }
 
         std::string sum = addStrings(num1, num2);
-        std::cout << num1 << " + " << " = " << sum << std::endl;
+        std::cout << num1 << " + " << num2 << " = " << sum << std::endl;
     }
     file.close();
     return 0;
