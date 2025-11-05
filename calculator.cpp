@@ -104,9 +104,72 @@ int comparePositive(const std::string& a, const std::string& b) {
     return 0;
 }
 
+// Subtract two positive decimal strings (assumes a >= b)
+std::string subtractPositive(const std::string& a, const std::string& b) {
+    std::string num1 = a, num2 = b;
+    
+    size_t dot1 = num1.find('.'), dot2 = num2.find('.');
+    std::string int1 = (dot1 == std::string::npos) ? num1 : num1.substr(0, dot1);
+    std::string frac1 = (dot1 == std::string::npos) ? "" : num1.substr(dot1 + 1);
+    std::string int2 = (dot2 == std::string::npos) ? num2 : num2.substr(0, dot2);
+    std::string frac2 = (dot2 == std::string::npos) ? "" : num2.substr(dot2 + 1);
+    
+    // Align fractions
+    size_t maxFrac = std::max(frac1.size(), frac2.size());
+    while (frac1.size() < maxFrac) frac1 += '0';
+    while (frac2.size() < maxFrac) frac2 += '0';
+    
+    // Subtract fractions
+    std::string fracDiff;
+    int borrow = 0;
+    for (int i = maxFrac - 1; i >= 0; --i) {
+        int diff = (frac1[i] - '0') - (frac2[i] - '0') - borrow;
+        if (diff < 0) {
+            diff += 10;
+            borrow = 1;
+        } else {
+            borrow = 0;
+        }
+        fracDiff.push_back(diff + '0');
+    }
+    std::reverse(fracDiff.begin(), fracDiff.end());
+    
+    // Subtract integers
+    std::string intDiff;
+    int i = int1.size() - 1, j = int2.size() - 1;
+    while (i >= 0 || j >= 0 || borrow) {
+        int diff = -borrow;
+        if (i >= 0) diff += int1[i--] - '0';
+        if (j >= 0) diff -= int2[j--] - '0';
+        if (diff < 0) {
+            diff += 10;
+            borrow = 1;
+        } else {
+            borrow = 0;
+        }
+        intDiff.push_back(diff + '0');
+    }
+    std::reverse(intDiff.begin(), intDiff.end());
+    
+    // Remove trailing zeros from fraction
+    while (!fracDiff.empty() && fracDiff.back() == '0') {
+        fracDiff.pop_back();
+    }
+    
+    // Combine
+    std::string result = trimLeadingZeros(intDiff);
+    if (result.empty()) result = "0";
+    if (!fracDiff.empty()) {
+        result += "." + fracDiff;
+    }
+    
+    return result;
+}
+
 std::string addStrings(const std::string & a, const std::string & b) {
     std::string num1 = a, num2 = b;
     char sign1 = '+', sign2 = '+';
+
     if (!num1.empty() && (num1[0] == '+' || num1[0] == '-')) {
         sign1 = num1[0];
         num1 = num1.substr(1);
@@ -118,10 +181,15 @@ std::string addStrings(const std::string & a, const std::string & b) {
 
     if (sign1 != sign2) {
         // Different signs: subtract
-        if (sign1 == '-') {
-            return addStrings("-" + num1, num2) == "0" ? "0" : "-" + addStrings(num2, "-" + num1);
+        int cmp = comparePositive(num1, num2);
+        if (cmp == 0) return "0";
+
+        if (cmp > 0) {
+            std::string result = subtractPositive(num1, num2);
+            return (sign1 == '-' && result != "0") ? "-" + result : result;
         } else {
-            return addStrings(num1, "-" + num2);
+            std::string result = subtractPositive(num2, num1);
+            return (sign2 == '-' && result != "0") ? "-" + result : result;
         }
     }
 
