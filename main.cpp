@@ -11,4 +11,19 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error: Cannot open file " << filename << std::endl;
         return 1;
     }
+
+    std::string line;
+    int lineNum = 0;
+    while (std::getline(file, line)) {
+        lineNum++;
+        std::istringstream iss(line);
+        std::string num1, num2;
+
+        if(!(iss >> num1 >> num2)) {
+            std::cout << "Line " << lineNum << ": Invalid format" << std::endl;
+            continue;
+        }
+
+        
+    }
 }
