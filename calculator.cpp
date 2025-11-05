@@ -101,4 +101,47 @@ std::string addStrings(const std::string & a, const std::string & b) {
     std::string frac1 = (dot1 == std::string::npos) ? "" : num1.substr(dot1 + 1);
     std::string int2 = (dot2 == std::string::npos) ? num2 : num2.substr(0, dot2);
     std::string frac2 = (dot2 == std::string::npos) ? "" : num2.substr(dot2 + 1);
+
+    // Align fractions
+    size_t maxFrac = std::max(frac1.size(), frac2.size());
+    while (frac1.size() < maxFrac) frac1 += '0';
+    while (frac2.size() < maxFrac) frac2 += '0';
+
+    // Add fractions
+    std::string fracSum;
+    int carry = 0;
+    for (int i = maxFrac - 1; i >= 0; --i) {
+        int sum = (frac1[i] - '0') + (frac2[i] - '0') + carry;
+        fracSum.push_back(sum % 10 + '0');
+        carry = sum / 10;
+    }
+    std::reverse(fracSum.begin(), fracSum.end());
+
+    // Add integers
+    std::string intSum;
+    int i = int1.size() - 1, j = int2.size() - 1;
+    while (i >= 0 || j >= 0 || carry) {
+        int sum = carry;
+        if (i >= 0) sum += int1[i--] - '0';
+        if (j >= 0) sum += int2[j--] - '0';
+        intSum.push_back(sum % 10 + '0');
+        carry = sum / 10;
+    }
+    std::reverse(intSum.begin(), intSum.end());
+
+    // Combine
+    std::string result = intSum;
+    if (!fracSum.empty()) {
+        fracSum = trimLeadingZeros(fracSum);
+        if (fracSum != "0") {
+            result += "." + fracSum;
+        } 
+    }
+
+    result = removeLeadingZeros(result);
+    if (sign1 == '-') {
+        if (result == "0") return "0";
+        return "-" + result;
+    }
+    return result;
 }
