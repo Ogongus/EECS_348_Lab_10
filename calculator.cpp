@@ -54,7 +54,7 @@ bool isValidDouble(const std::string& s) {
 
     while (i < n) {
         if (s[i] == '.') {
-            if (hasDot) return false: // two dots
+            if (hasDot) return false; // two dots
             hasDot == true;
             if (!digitBeforeDot && i == (s[0] == '+' || s[0] == '-' ? 1 : 0)) {
                 return false; // starts with dot
